@@ -1,0 +1,6 @@
+<IfModule mod_headers.c>
+    # Izinkan Service Worker dari /PBL-toko/sw.js mengontrol scope /PBL-toko/app-toko/
+    <Files "sw.js">
+        Header set Service-Worker-Allowed "/PBL-toko/app-toko/"
+    </Files>
+</IfModule>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokoBestari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
+        .product-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .btn-add:hover { background-color: #00880f; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- NAVBAR -->
+    <header class="bg-white sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-4">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-1 shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 7h12.8M7 13l-1.4-7M17 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                </div>
+                <span class="text-xl font-bold text-green-600 tracking-tight">Toko<span class="text-gray-800">Bestari</span></span>
+            </a>
+
+            <!-- Search bar -->
+            <div class="flex-1 max-w-xl">
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Cari barang di TokosBestari..." oninput="filterBarang()"
+                        class="w-full h-10 pl-4 pr-10 rounded-lg border border-gray-300 focus:border-green-500 focus:outline-none text-sm bg-gray-50">
+                    <button class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart icon -->
+            <button class="relative p-2 text-gray-500 hover:text-green-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center" id="cart-count">0</span>
+            </button>
+
+            <!-- Avatar -->
+            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-sm shrink-0">TB</div>
+        </div>
+    </header>
+
+    <!-- BANNER -->
+    <div class="bg-gradient-to-r from-green-500 to-green-400">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+            <div>
+                <p class="text-white/80 text-sm font-medium">Promo Hari Ini</p>
+                <h2 class="text-white text-2xl font-bold mt-0.5">Belanja Hemat,<br>Kualitas Terjamin!</h2>
+                <span class="inline-block mt-3 bg-white text-green-600 text-sm font-semibold px-4 py-1.5 rounded-full">Lihat Semua Promo</span>
+            </div>
+            <div class="text-white opacity-20 hidden sm:block">
+                <svg class="w-28 h-28" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+
+        <!-- Section header -->
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800">Semua Produk</h2>
+                <p class="text-sm text-gray-400" id="product-count">Memuat produk...</p>
+            </div>
+            <select onchange="sortBarang(this.value)" class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-600 focus:outline-none focus:border-green-400">
+                <option value="">Urutkan</option>
+                <option value="harga-asc">Harga: Terendah</option>
+                <option value="harga-desc">Harga: Tertinggi</option>
+                <option value="nama">Nama A-Z</option>
+            </select>
+        </div>
+
+        <!-- Skeleton loader -->
+        <div id="skeleton-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div class="bg-white rounded-xl overflow-hidden" id="sk1">
+                <div class="skeleton h-36"></div>
+                <div class="p-3 space-y-2">
+                    <div class="skeleton h-3 rounded w-3/4"></div>
+                    <div class="skeleton h-3 rounded w-1/2"></div>
+                    <div class="skeleton h-4 rounded w-2/3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product grid -->
+        <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 hidden"></div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-16 h-16 mb-4 opacity-30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m21 21-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+            <p class="text-lg font-semibold">Produk tidak ditemukan</p>
+            <p class="text-sm mt-1">Coba kata kunci lain</p>
+        </div>
+
+        <!-- Error state -->
+        <div id="error-state" class="hidden flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-16 h-16 mb-4 text-red-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <p class="text-lg font-semibold text-red-400">Gagal memuat produk</p>
+            <p class="text-sm mt-1">Periksa koneksi atau server API</p>
+            <button onclick="ambilDataBarang()" class="mt-4 px-5 py-2 bg-green-500 text-white rounded-full text-sm font-semibold hover:bg-green-600">Coba Lagi</button>
+        </div>
+    </main>
+
+    <!-- Toast notif -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        Produk ditambahkan ke keranjang!
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
