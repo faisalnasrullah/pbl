@@ -4,10 +4,10 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 // Deklarasi parameter koneksi
-$host = "sql201.infinityfree.com";
-$user = "if0_41788710";
-$pass = "Faisal1305"; // Kosongkan jika XAMPP bawaan
-$db   = "if0_41788710_toko";
+$host = "localhost";
+$user = "root";
+$pass = ""; // Kosongkan jika XAMPP bawaan
+$db   = "db_toko";
 
 // Membuka jembatan koneksi
 $koneksi = mysqli_connect($host, $user, $pass, $db);

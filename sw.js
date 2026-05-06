@@ -4,16 +4,16 @@ const API_CACHE_NAME = 'toko-api-cache-v2';
 // File statis yang di-cache saat install
 // Path disesuaikan dengan struktur folder di hosting (root-relative)
 const urlsToCache = [
-  '/PBL-toko/app-toko/',
-  '/PBL-toko/app-toko/index.html',
-  '/PBL-toko/app-toko/script.js',
-  '/PBL-toko/app-toko/manifest.json',
-  '/PBL-toko/app-toko/icon-192x192.png',
-  '/PBL-toko/app-toko/icon-512x512.png'
+  '/app-toko/',
+  '/app-toko/index.html',
+  '/app-toko/script.js',
+  '/app-toko/manifest.json',
+  '/app-toko/icon-192x192.png',
+  '/app-toko/icon-512x512.png'
 ];
 
 // URL API yang ingin di-cache responsnya
-const API_URL = '/PBL-toko/api-toko/get-barang.php';
+const API_URL = '/api-toko/get-barang.php';
 
 // 1. TAHAP INSTALL: Simpan file-file statis ke Cache
 self.addEventListener('install', event => {
