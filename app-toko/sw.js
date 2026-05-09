@@ -1,23 +1,23 @@
-const CACHE_NAME = 'toko-pwa-v5';
-const API_CACHE_NAME = 'toko-api-cache-v2';
+const CACHE_NAME = 'toko-pwa-v8';
+const API_CACHE_NAME = 'toko-api-cache-v4';
 
 // File statis yang di-cache saat install
-// Path disesuaikan dengan struktur folder di hosting (root-relative)
+// Path relatif terhadap lokasi sw.js (app-toko/)
 const urlsToCache = [
-  '/app-toko/',
-  '/app-toko/index.html',
-  '/app-toko/script.js',
-  '/app-toko/manifest.json',
-  '/app-toko/icon-192x192.png',
-  '/app-toko/icon-512x512.png'
+  './',
+  './index.html',
+  './script.js',
+  './manifest.php',
+  './icon-192x192.png',
+  './icon-512x512.png'
 ];
 
 // URL API yang ingin di-cache responsnya
-const API_URL = '/api-toko/get-barang.php';
+const API_URL = '../api-toko/get-barang.php';
 
 // 1. TAHAP INSTALL: Simpan file-file statis ke Cache
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Langsung aktif tanpa menunggu tab lain tertutup
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -45,12 +45,10 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
   // Strategi NETWORK FIRST untuk API data barang
-  // => Coba ambil data terbaru dari server, jika gagal (offline) pakai cache
   if (url.pathname.includes('get-barang.php')) {
     event.respondWith(
       fetch(event.request)
         .then(networkResponse => {
-          // Berhasil online: simpan respons ke cache API, lalu kembalikan
           const responseClone = networkResponse.clone();
           caches.open(API_CACHE_NAME).then(cache => {
             cache.put(event.request, responseClone);
@@ -58,7 +56,6 @@ self.addEventListener('fetch', event => {
           return networkResponse;
         })
         .catch(() => {
-          // Gagal (offline): ambil dari cache API terakhir
           console.log('Offline! Menggunakan cache data barang...');
           return caches.match(event.request);
         })
@@ -66,8 +63,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Strategi CACHE FIRST untuk file statis (HTML, JS, gambar, dll)
-  // => Ambil dari cache dulu agar cepat, jika tidak ada baru ke network
+  // Strategi CACHE FIRST untuk file statis
   event.respondWith(
     caches.match(event.request)
       .then(response => {

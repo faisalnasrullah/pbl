@@ -1,7 +1,7 @@
 // 1. Fungsi Async untuk mengambil data barang
 async function ambilDataBarang() {
     try {
-        const response = await fetch('http://localhost/PBL-toko/api-toko/get-barang.php');
+        const response = await fetch(CONFIG.API_BASE_URL + 'get-barang.php');
         const hasil = await response.json();
         
         if (hasil.status === 'success') {
@@ -61,7 +61,7 @@ ambilDataBarang();
 // Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/PBL-toko/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('SW registered:', reg.scope))
             .catch(err => console.error('SW failed:', err));
     });
@@ -76,7 +76,7 @@ formTambah.addEventListener('submit', async function(e) {
     const hargaBarang = document.getElementById('input-harga').value;
 
     try {
-        const response = await fetch('http://localhost/PBL-toko/api-toko/tambah-barang.php', {
+        const response = await fetch(CONFIG.API_BASE_URL + 'tambah-barang.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nama_barang: namaBarang, harga: hargaBarang })
@@ -121,7 +121,7 @@ function hapusBarang(id_target, nama_barang) {
 
     document.getElementById('btn-konfirmasi-hapus').onclick = async function() {
         try {
-            const response = await fetch('http://localhost/PBL-toko/api-toko/hapus_barang.php', {
+            const response = await fetch(CONFIG.API_BASE_URL + 'hapus_barang.php', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id_target })
@@ -160,7 +160,7 @@ async function prosesEditBarang() {
     }
 
     try {
-        const response = await fetch('http://localhost/PBL-toko/api-toko/edit_barang.php', {
+        const response = await fetch(CONFIG.API_BASE_URL + 'edit_barang.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id, nama_barang: namaBaru, harga: hargaBaru })

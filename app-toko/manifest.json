@@ -3,10 +3,10 @@
   "short_name": "TokoKu",
   "description": "Aplikasi pencatat barang PWA",
   "start_url": "./index.html",
-  "scope": ".",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#8b5cf6",
+  "theme_color": "#059669",
   "icons": [
     {
       "src": "./icon-192x192.png",
